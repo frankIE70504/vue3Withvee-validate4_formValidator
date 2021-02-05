@@ -1,5 +1,5 @@
 <template>
-    <H2>Frankie{{msg}}!</H2>
+    <H2>{{msg}}</H2>
     <Form @submit="onSubmit">
         <label for="name">姓名</label>
         <Field class="form-control" id="name" name="name" type="text" :class="{'is-invalid':!nameValidator}" :rules="isNameRequired" v-model="name"/>
@@ -14,10 +14,14 @@
         <ErrorMessage style="color: red" name="age"/>
         <br>
 
-        <button>Sign up</button>
+        <button>加入!</button>
     </Form>
     <div>
-        <p v-for="studentDeatil in studentDetails" :key="studentDeatil">姓名:{{studentDeatil.name}},學號:{{studentDeatil.studentId}} ,姓名:{{studentDeatil.age}}</p>
+        <div v-for="(studentDeatil,index) in studentDetails" :key="studentDeatil">
+            <p >{{index}}.姓名:{{studentDeatil.name}},學號:{{studentDeatil.studentId}} ,姓名:{{studentDeatil.age}}</p>
+            <button @click="deleteDetil(index)">刪除</button>
+        </div>
+
     </div>
 </template>
 
@@ -37,7 +41,7 @@
                 nameValidator: true,
                 studentIdValidator: true,
                 ageValidator: true,
-                msg: '好帥',
+                msg: 'Hello World',
                 name: '',
                 studentId: '',
                 age: 18,
@@ -82,6 +86,9 @@
                 }
                 this.ageValidator = true;
                 return true;
+            },
+            deleteDetil(index){
+                this.studentDetails.splice(index,1)
             }
         }
     }
