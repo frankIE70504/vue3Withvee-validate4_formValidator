@@ -17,17 +17,25 @@
         <button>加入!</button>
     </Form>
     <div>
-        <div v-for="(studentDeatil,index) in studentDetails" :key="studentDeatil">
-            <p >{{index}}.姓名:{{studentDeatil.name}},學號:{{studentDeatil.studentId}} ,姓名:{{studentDeatil.age}}</p>
+        <div v-for="(studentDetail,index) in studentDetails" :key="studentDetail">
+            <p>{{index}}.姓名:{{studentDetail.name}},學號:{{studentDetail.studentId}} ,姓名:{{studentDetail.age}}</p>
+            <button @click="ctlModifyStudentDailog(index,studentDetail)">編輯</button>
             <button @click="deleteDetil(index)">刪除</button>
+
         </div>
 
+    </div>
+    <div>
+        <ModifyStudentDailog :index="modifyIndex" :studentDetail="modifystudentDetail"
+                             v-if="showModifyStudentDailog" @close="showModifyStudentDailog = false"
+                             @cModifyStudent="fModifyStudent"></ModifyStudentDailog>
     </div>
 </template>
 
 <script>
 
     import {ErrorMessage, Field, Form} from 'vee-validate';
+    import ModifyStudentDailog from './components/ModifyStudentDailog.vue'
 
     export default {
         name: 'App',
@@ -35,6 +43,7 @@
             Field,
             Form,
             ErrorMessage,
+            ModifyStudentDailog
         },
         data() {
             return {
@@ -46,6 +55,9 @@
                 studentId: '',
                 age: 18,
                 studentDetails: [],
+                showModifyStudentDailog: false,
+                modifystudentDetail: {},
+                modifyIndex: 0
             }
         },
         methods: {
@@ -83,13 +95,28 @@
                 if (!value) {
                     this.ageValidator = false;
                     return '請填年齡';
+                } else if (value < 18) {
+                    this.ageValidator = false;
+                    return '年齡錯誤';
                 }
                 this.ageValidator = true;
                 return true;
             },
-            deleteDetil(index){
-                this.studentDetails.splice(index,1)
+            deleteDetil(index) {
+                this.studentDetails.splice(index, 1)
+            },
+            fModifyStudent(index, name, studentId, age) {
+                this.studentDetails[index].name = name;
+                this.studentDetails[index].studentId = studentId;
+                this.studentDetails[index].age = age;
+            },
+            ctlModifyStudentDailog(index, studentDetail) {
+                    this.modifyIndex = index;
+                    this.modifystudentDetail = studentDetail;
+                    this.showModifyStudentDailog = true;
+
             }
+
         }
     }
 </script>
